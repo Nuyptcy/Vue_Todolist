@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+    <head>
+        <title>Vue</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <!--Font Awsome CSS-->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.10.4/themes/cupertino/jquery-ui.css">
+        <!-- jQuery CDN -->
+        <script  src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+        <!-- jQuery UI CDN -->
+        <script  src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.10.4/jquery-ui.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <!-- Vue CDN -->
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.js'></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+        <title>Vue-Todo</title>
+    </head>
+    <body>
+    <div id="app">
+      <p>
+        <input type="text" v-model="inputText" 
+        @compositionstart="cstartHandler" 
+        @compostionend="cendHandler"
+        @keyup.enter="inputHandler">
+      </p>
+      <p>
+        <button @click="show='all'">全部</button>
+        <button @click="show='open'">未完成</button>
+        <button @click="show='done'">完成</button>
+      </p>
+      <ul>
+          <li v-for="(item,index) of filterList" :key="item.timestamp">
+            <template v-if="editing === item">
+              <input type="text" v-model="editingText">
+              <button @click="completeHandler">完成</button>
+              <button @click="cancelHandler">取消</button>
+            </template> 
+            <template v-else>
+              <input type="checkbox" v-model="item.status">{{item.content}}
+              <button @click="editHandler(item)">修改</button>
+              <button @click="deleteHandler(index)">刪除</button>
+            </template>
+              
+          </li>
+  
+        
+          
+      </ul>
+    </div>
+    <script>
+    new Vue({
+      el:"#app",
+      data:{
+        inputText:"",
+        list:[],
+        compositionStatus:false,
+        editing:null,
+        editingText:"",
+        show:"all"
+        },
+      computed:{
+        filterList(){
+          if(this.show === "all"){
+            return this.list
+            }else if(this.show === "open"){
+              return this.list.filter((item)=>{
+                return item.status === false
+              })
+            }else if(this.show === "done"){
+              return this.list.filter((item)=>{
+                return item.status === true
+              })
+            }else{
+              return[]
+            }
+        },
+        //all, open, done
+      },
+      methods:{
+          cstartHandler(){
+            this.compositionStatus = true
+          },
+          cendHandler(){
+            this.compositionStatus = true
+          },
+          inputHandler(){
+            if(this.compositionStatus) return false
+            this.list.push({
+              content:this.inputText,
+              timestamp:new Date().getTime(),
+              status:false,
+              
+              
+            })
+            this.inputText= ""
+          },
+          
+          deleteHandler(item){
+            this.list = this.list.filter((taaget)=>{
+              return target != index;
+            })
+            // this.list.splice(index,1)
+            },
+            editHandler(item){
+            this.editing = item
+            this.editingText = 
+            item.content
+          },
+          completeHandler(){
+            this.editing.content = this.editingText
+            this.cancelHandler()
+          },
+          cancelHandler(){
+            this.editingText = ""
+            this.editing = null
+          }
+          ,
+          },
+          
+        }
+      )
+    </script>
+    </body>
+</html>
